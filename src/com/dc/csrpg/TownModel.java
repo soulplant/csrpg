@@ -1,29 +1,33 @@
 package com.dc.csrpg;
 
+
 public class TownModel {
   private Point playerPosition = new Point(0, 0);
   private Point viewportPosition = new Point(0, 0);
 
-  private final Grid<Grid<Tile>> tiles = new Grid<Grid<Tile>>(
-      Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT) {
+  private final Grid<Tile> tiles = new Grid<Tile>(
+      Constants.WORLD_WIDTH * Constants.SCREEN_WIDTH_TILES,
+      Constants.WORLD_HEIGHT * Constants.SCREEN_HEIGHT_TILES) {
     @Override
-    protected Grid<Tile> createDefault(int x, int y) {
-      return new Grid<Tile>(
-          Constants.SCREEN_WIDTH_TILES, Constants.SCREEN_HEIGHT_TILES) {
-        @Override
-        protected Tile createDefault(int x, int y) {
-          return new Tile(Tile.Type.GRASS, true);
-        }
-      };
+    protected Tile createDefault(int x, int y) {
+      return new Tile(Tile.Type.GRASS, true);
     }
   };
 
 
   public TownModel() {
-    tiles.get(0, 0).set(5, 0, new Tile(Tile.Type.WALL, false));
-    tiles.get(1, 0).set(5, 5, new Tile(Tile.Type.WALL, false));
-    tiles.get(1, 1).set(0, 5, new Tile(Tile.Type.WALL, false));
-    tiles.get(0, 1).set(10, 3, new Tile(Tile.Type.WALL, false));
+    getSubview(0, 0).set(5, 0, new Tile(Tile.Type.WALL, false));
+    getSubview(1, 0).set(5, 5, new Tile(Tile.Type.WALL, false));
+    getSubview(1, 1).set(0, 5, new Tile(Tile.Type.WALL, false));
+    getSubview(0, 1).set(10, 3, new Tile(Tile.Type.WALL, false));
+  }
+
+  private Grid<Tile>.Subview getSubview(int x, int y) {
+    return tiles.getSubview(new Point(x, y), Constants.SCREEN_WIDTH_TILES, Constants.SCREEN_HEIGHT_TILES);
+  }
+
+  private Grid<Tile>.Subview getSubview(Point point) {
+    return getSubview(point.x, point.y);
   }
 
   public Point getPlayerPosition() {
@@ -41,28 +45,26 @@ public class TownModel {
     return new Point(x, y);
   }
 
-  private Point calculateOffsetWithinGrid(Point point) {
+  private Point calculateOffsetWithinSubview(Point point) {
     int x = point.x % Constants.SCREEN_WIDTH_TILES;
     int y = point.y % Constants.SCREEN_HEIGHT_TILES;
     return new Point(x, y);
   }
 
-  public Grid<Grid<Tile>> getTiles() {
-    return tiles;
-  }
+//  public Grid<Tile> getTiles() {
+//    return tiles;
+//  }
 
   public Point getViewportPosition() {
     return viewportPosition;
   }
 
   public Tile getTile(Point point) {
-    Point viewport = calculateTopLevelGrid(point);
-    Point inside = calculateOffsetWithinGrid(point);
-    return tiles.get(viewport).get(inside);
+    return tiles.get(point);
   }
 
-  public Grid<Tile> getViewportTiles() {
-    return tiles.get(viewportPosition);
+  public Grid<Tile>.Subview getViewportTiles() {
+    return getSubview(viewportPosition);
   }
 
   public boolean isInWorldBounds(Point point) {
@@ -71,14 +73,14 @@ public class TownModel {
   }
 
   public int getWorldWidth() {
-    return tiles.getWidth() * tiles.get(new Point(0, 0)).getWidth();
+    return tiles.getWidth();
   }
 
   public int getWorldHeight() {
-    return tiles.getHeight() * tiles.get(new Point(0, 0)).getHeight();
+    return tiles.getHeight();
   }
 
   public Point getPlayerViewportPosition() {
-    return calculateOffsetWithinGrid(playerPosition);
+    return calculateOffsetWithinSubview(playerPosition);
   }
 }
