@@ -1,26 +1,13 @@
 package com.dc.csrpg;
 
-import java.util.List;
 
 public class TownModel {
   private Point playerPosition = new Point(0, 0);
   private Point viewportPosition = new Point(0, 0);
+  private final Grid<Tile> tiles;
 
-  private final Grid<Tile> tiles = new Grid<Tile>(
-      Constants.WORLD_WIDTH * Constants.SCREEN_WIDTH_TILES,
-      Constants.WORLD_HEIGHT * Constants.SCREEN_HEIGHT_TILES) {
-    @Override
-    protected Tile createDefault(int x, int y) {
-      return new Tile(Tile.Type.GRASS, true);
-    }
-  };
-
-
-  public TownModel() {
-    getSubview(0, 0).set(5, 0, new Tile(Tile.Type.WALL, false));
-    getSubview(1, 0).set(5, 5, new Tile(Tile.Type.WALL, false));
-    getSubview(1, 1).set(0, 5, new Tile(Tile.Type.WALL, false));
-    getSubview(0, 1).set(10, 3, new Tile(Tile.Type.WALL, false));
+  public TownModel(Grid<Tile> tiles) {
+    this.tiles = tiles;
   }
 
   private Grid<Tile>.Subview getSubview(int x, int y) {
@@ -52,10 +39,6 @@ public class TownModel {
     return new Point(x, y);
   }
 
-//  public Grid<Tile> getTiles() {
-//    return tiles;
-//  }
-
   public Point getViewportPosition() {
     return viewportPosition;
   }
@@ -83,21 +66,5 @@ public class TownModel {
 
   public Point getPlayerViewportPosition() {
     return calculateOffsetWithinSubview(playerPosition);
-  }
-
-  public static TownModel fromFile(String filename) {
-    List<String> lines = Util.readFile(filename);
-    if (lines.isEmpty()) {
-      throw new IllegalArgumentException();
-    }
-    int worldWidth = lines.get(0).length();
-    int worldHeight = lines.size();
-    if (worldWidth % Constants.SCREEN_WIDTH_TILES == 0) {
-      throw new IllegalArgumentException();
-    }
-    if (worldHeight % Constants.SCREEN_HEIGHT_TILES == 0) {
-      throw new IllegalArgumentException();
-    }
-    return null;
   }
 }

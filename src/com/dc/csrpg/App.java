@@ -7,7 +7,9 @@ public class App {
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    TownModel model = TownModel.fromFile("world.map");
+    Grid<Tile> worldGrid = Loader.loadGridFromFile("world.map");
+
+    TownModel model = new TownModel(worldGrid);
     TownPanel townPanel = new TownPanel(new TownController(model), model);
 
     BattlePanel battlePanel = new BattlePanel();

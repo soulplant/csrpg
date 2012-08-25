@@ -19,11 +19,9 @@ public class TownPanel extends JPanel {
   private final int PLAYER_WIDTH_PX = 32;
   private final int PLAYER_HEIGHT_PX = 32;
 
-  private final TownController controller;
   private final TownModel model;
 
   public TownPanel(final TownController controller, TownModel model) {
-    this.controller = controller;
     this.model = model;
     setFocusable(true);
     addKeyListener(new KeyAdapter() {
