@@ -49,8 +49,8 @@ public class TownPanel extends JPanel {
     super.paintComponent(g);
     g.setColor(Color.GRAY);
     g.fillRect(0, 0, getWidth(), getHeight());
-    drawTiles(g, model.getTiles());
-    drawPlayer(g, model.getPlayerPosition());
+    drawTiles(g, model.getViewportTiles());
+    drawPlayer(g, model.getPlayerViewportPosition());
   }
 
   private void drawTiles(Graphics g, Grid<Tile> tiles) {
