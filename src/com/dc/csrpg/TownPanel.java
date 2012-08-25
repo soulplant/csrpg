@@ -53,7 +53,7 @@ public class TownPanel extends JPanel {
     drawPlayer(g, model.getPlayerPosition());
   }
 
-  private void drawTiles(Graphics g, TileGrid tiles) {
+  private void drawTiles(Graphics g, Grid<Tile> tiles) {
     for (int x = 0; x < tiles.getWidth(); x++) {
       for (int y = 0; y < tiles.getHeight(); y++) {
         Tile tile = tiles.get(x, y);
