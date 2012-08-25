@@ -64,7 +64,7 @@ public class BattlePanel extends JPanel implements BattleView {
 
         case KeyEvent.VK_ESCAPE:
         case KeyEvent.VK_BACK_SPACE:
-
+          BattlePanel.this.controller.onMenuBack();
           break;
 
           default:

@@ -75,6 +75,12 @@ public class BattleController {
     refresh();
   }
 
+  public void onMenuBack() {
+    menu.setCurrentMenu(Menu.MAIN);
+    menu.setSelectedIndex(0);
+    refresh();
+  }
+
   public void onMenuAction() {
     switch (menu.getCurrentMenu()) {
     case MAIN:
@@ -84,6 +90,7 @@ public class BattleController {
         break;
       case 1: // Skillz0rs
         menu.setCurrentMenu(Menu.SKILLS);
+        menu.setSelectedIndex(0);
         break;
       default:
         throw new IllegalStateException();
