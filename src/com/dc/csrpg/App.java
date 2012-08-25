@@ -7,7 +7,10 @@ public class App {
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    frame.add(new BattlePanel());
+    TownModel model = new TownModel();
+    TownPanel townPanel = new TownPanel(new TownController(model), model);
+
+    frame.add(townPanel);
     frame.pack();
     frame.setVisible(true);
   }
