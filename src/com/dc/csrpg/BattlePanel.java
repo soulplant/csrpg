@@ -1,7 +1,6 @@
 package com.dc.csrpg;
 
 import com.dc.csrpg.controller.battle.BattleController;
-import com.dc.csrpg.model.battle.Skill;
 import com.dc.csrpg.view.battle.BattleView;
 
 import javax.swing.JPanel;
@@ -18,11 +17,7 @@ import java.util.List;
 
 @SuppressWarnings("serial")
 public class BattlePanel extends JPanel implements BattleView {
-  enum Menu {
-    MAIN,
-    SKILLS,
-  }
-  
+
   private static final int MENU_OFFSET_LEFT_PX = 10;
 
   private static final int HITBOX_OFFSET_LEFT_PX = 100;
@@ -34,12 +29,8 @@ public class BattlePanel extends JPanel implements BattleView {
 
   private final BattleController controller;
 
-  private Color color = Color.ORANGE;
-  private Menu currentMenu = Menu.MAIN;
   private int selectedIndex = 0;
-
   private final List<String> menuItems = new ArrayList<String>();
-  private final List<Skill> displayedSkills = new ArrayList<Skill>();
 
   private String playerName = "Player";
   private String enemyName = "Enemy";
@@ -60,76 +51,36 @@ public class BattlePanel extends JPanel implements BattleView {
       public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
         case KeyEvent.VK_DOWN:
-          maybeChangeIndex(selectedIndex + 1);
+          BattlePanel.this.controller.onMenuDown();
           break;
         case KeyEvent.VK_UP:
-          maybeChangeIndex(selectedIndex - 1);
+          BattlePanel.this.controller.onMenuUp();
           break;
-          
+
         case KeyEvent.VK_ENTER:
         case KeyEvent.VK_SPACE:
-          doSelectedMenu();
+          BattlePanel.this.controller.onMenuAction();
           break;
 
         case KeyEvent.VK_ESCAPE:
         case KeyEvent.VK_BACK_SPACE:
-          
+
           break;
-          
+
           default:
             break;
         }
-        
+
         //BattlePanel.this.controller.onPlayerAttack();
         repaint();
       }
     });
   }
-  
-  private void doSelectedMenu() {
-    switch (currentMenu) {
-    
-    case MAIN:
-      switch (selectedIndex) {
-      case 0: // Attack
-        controller.onPlayerAttack();
-        break;
-      case 1: // Skillz0rs
-        currentMenu = Menu.SKILLS;
-        break;
-      default:
-          throw new IllegalStateException();
-      }
-      break;
-      
-    case SKILLS:
-      controller.onPlayerSkill(displayedSkills.get(selectedIndex));
-      break;
-      
-    } 
-  }
-  
-  private void maybeChangeIndex(int desiredIndex) {
-    switch (currentMenu) {
-    case MAIN:
-      if ((desiredIndex >= 0) && (desiredIndex < menuItems.size())) {
-        selectedIndex = desiredIndex;
-      }
-      break;
-    case SKILLS:
-      if ((desiredIndex >= 0) && (desiredIndex < displayedSkills.size())) {
-        selectedIndex = desiredIndex;
-      }
-      break;
-    default:
-      throw new IllegalStateException();
-    }
-  }
 
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    g.setColor(color);
+    g.setColor(Color.ORANGE);
     g.fillRect(0, 0, getWidth(), getHeight());
 
     drawMenu(g);
@@ -143,20 +94,7 @@ public class BattlePanel extends JPanel implements BattleView {
     g.setColor(Color.BLACK);
     g.fillRect(offset.x, offset.y, 320, 240);
 
-    switch (currentMenu)
-    {
-    case MAIN:
-      drawMenuItems(g, offset, menuItems);
-      break;
-
-    case SKILLS:
-      drawMenuItems(g, offset, toStrings(displayedSkills));
-      break;
-
-    default:
-      break;
-
-    }
+    drawMenuItems(g, offset, menuItems);
   }
 
   private void drawMenuItems(Graphics g, Point offset, List<String> items) {
@@ -217,9 +155,8 @@ public class BattlePanel extends JPanel implements BattleView {
   }
 
   @Override
-  public void showSkills(List<Skill> skills) {
-    displayedSkills.clear();
-    displayedSkills.addAll(skills);
+  public void setSelectedIndex(int selectedIndex) {
+    this.selectedIndex = selectedIndex;
     repaint();
   }
 
@@ -250,14 +187,6 @@ public class BattlePanel extends JPanel implements BattleView {
   @Override
   public void refresh() {
     repaint();
-  }
-
-  private static List<String> toStrings(List<Skill> skills) {
-    List<String> strings = new ArrayList<String>();
-    for (Skill skill : skills) {
-      strings.add(skill.getName());
-    }
-    return strings;
   }
 
 }

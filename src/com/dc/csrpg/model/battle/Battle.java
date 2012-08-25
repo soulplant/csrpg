@@ -34,4 +34,12 @@ public class Battle {
     playerTurn = !playerTurn;
   }
 
+  public Entity getCurrentEntity() {
+    if (playerTurn) {
+      return player;
+    } else {
+      return enemy;
+    }
+  }
+
 }

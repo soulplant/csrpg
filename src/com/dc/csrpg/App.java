@@ -3,6 +3,8 @@ package com.dc.csrpg;
 import com.dc.csrpg.controller.battle.BattleController;
 import com.dc.csrpg.model.battle.Battle;
 import com.dc.csrpg.model.battle.Entity;
+import com.dc.csrpg.model.battle.MenuState;
+import com.dc.csrpg.model.battle.MenuState.Menu;
 import com.dc.csrpg.model.battle.Skill;
 
 import javax.swing.JFrame;
@@ -23,8 +25,9 @@ public class App {
     Entity player = new Entity("Turing", 10, 100, 100, getPlayerSkills());
     Entity enemy = new Entity("Stallman", 10, 100, 100, getEnemySkills());
 
+    MenuState menu = new MenuState(Menu.MAIN, 0);
     Battle battle = new Battle(player, enemy, true);
-    BattleController battleController = new BattleController(battle);
+    BattleController battleController = new BattleController(battle, menu);
     BattlePanel battlePanel = new BattlePanel(battleController);
     battleController.setView(battlePanel);
 
