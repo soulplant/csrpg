@@ -11,7 +11,8 @@ public class TownModel {
   }
 
   private Grid<Tile>.Subview getSubview(int x, int y) {
-    return tiles.getSubview(new Point(x, y), Constants.SCREEN_WIDTH_TILES, Constants.SCREEN_HEIGHT_TILES);
+    return tiles.getSubview(new Point(x, y), Constants.SCREEN_WIDTH_TILES,
+        Constants.SCREEN_HEIGHT_TILES);
   }
 
   private Grid<Tile>.Subview getSubview(Point point) {
@@ -66,5 +67,10 @@ public class TownModel {
 
   public Point getPlayerViewportPosition() {
     return calculateOffsetWithinSubview(playerPosition);
+  }
+
+  public boolean isPassable(Point point) {
+    Tile tile = getTile(point);
+    return tile.passable && !tile.hasNPC() && !tile.hasItem();
   }
 }

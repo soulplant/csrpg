@@ -12,7 +12,7 @@ public class TownController {
     if (!model.isInWorldBounds(newPlayerPosition)) {
       return;
     }
-    if (model.getTile(newPlayerPosition).passable) {
+    if (model.isPassable(newPlayerPosition)) {
       model.setPlayerPosition(newPlayerPosition);
     }
   }

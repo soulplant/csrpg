@@ -9,17 +9,39 @@ import com.google.gson.Gson;
 public class Loader {
   private static class EntityDescriptor {
     public enum Type {
-      TILE
+      TILE, NPC, ITEM
     }
     public Type type;
+
+    // TILE
     public Tile.Type tileType;
     public boolean passable;
 
+    // NPC
+    public String message;
+
+    // ITEM
+    public String name;
+
     public Tile toTile() {
-      if (type != Type.TILE) {
-        throw new IllegalStateException(type + " != TILE");
-      }
+      checkType(Type.TILE);
       return new Tile(tileType, passable);
+    }
+
+    public NPC toNPC() {
+      checkType(Type.NPC);
+      return new NPC(message);
+    }
+
+    public Item toItem() {
+      checkType(Type.ITEM);
+      return new Item(name);
+    }
+
+    private void checkType(Type type) {
+      if (this.type != type) {
+        throw new IllegalStateException(this.type + " != " + type);
+      }
     }
   }
 
@@ -36,7 +58,7 @@ public class Loader {
       throw new IllegalArgumentException("height of " + worldHeight + " should be divisible by " + Constants.SCREEN_HEIGHT_TILES);
     }
 
-    Grid<Tile> grid = new Grid<Tile>(worldWidth, worldHeight) {
+    Grid<Tile> tileGrid = new Grid<Tile>(worldWidth, worldHeight) {
       @Override
       protected Tile createDefault(int x, int y) {
         return new Tile(Tile.Type.GRASS, true);
@@ -63,16 +85,20 @@ public class Loader {
         throw new IllegalArgumentException("width of " + worldWidth + " should be divisible by " + Constants.SCREEN_WIDTH_TILES);
       }
       for (int x = 0; x < line.length(); x++) {
-        grid.set(x, y, makeTile(entityMap.get(line.charAt(x))));
+        EntityDescriptor entity = entityMap.get(line.charAt(x));
+        switch (entity.type) {
+        case TILE:
+          tileGrid.set(x, y, entity.toTile());
+          break;
+        case NPC:
+          tileGrid.get(x, y).setNPC(entity.toNPC());
+          break;
+        case ITEM:
+          tileGrid.get(x, y).setItem(entity.toItem());
+          break;
+        }
       }
     }
-    return grid;
-  }
-
-  private static Tile makeTile(EntityDescriptor entityDescriptor) {
-    if (entityDescriptor.type != EntityDescriptor.Type.TILE) {
-      return new Tile(Tile.Type.GRASS, true);
-    }
-    return entityDescriptor.toTile();
+    return tileGrid;
   }
 }

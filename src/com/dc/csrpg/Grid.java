@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class Grid<T> {
+public class Grid<T> {
   public class Subview {
     private final int x;
     private final int y;
@@ -62,7 +62,9 @@ public abstract class Grid<T> {
     }
   }
 
-  abstract protected T createDefault(int x, int y);
+  protected T createDefault(int x, int y) {
+    return null;
+  }
 
   public T get(int x, int y) {
     return tiles.get(getOffsetIndex(x, y));
