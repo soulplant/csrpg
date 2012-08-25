@@ -9,6 +9,16 @@ public class TownController {
 
   public void onPlayerMove(Direction direction) {
     Point newPlayerPosition = model.getPlayerPosition().move(direction);
-    model.setPlayerPosition(newPlayerPosition);
+    if (!isInBounds(newPlayerPosition)) {
+      return;
+    }
+    if (model.getTiles().get(newPlayerPosition).passable) {
+      model.setPlayerPosition(newPlayerPosition);
+    }
+  }
+
+  private boolean isInBounds(Point point) {
+    return point.x >= 0 && point.x < model.getTiles().getWidth() &&
+        point.y >= 0 && point.y < model.getTiles().getHeight();
   }
 }
