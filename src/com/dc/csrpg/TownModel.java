@@ -1,5 +1,6 @@
 package com.dc.csrpg;
 
+import java.util.List;
 
 public class TownModel {
   private Point playerPosition = new Point(0, 0);
@@ -82,5 +83,21 @@ public class TownModel {
 
   public Point getPlayerViewportPosition() {
     return calculateOffsetWithinSubview(playerPosition);
+  }
+
+  public static TownModel fromFile(String filename) {
+    List<String> lines = Util.readFile(filename);
+    if (lines.isEmpty()) {
+      throw new IllegalArgumentException();
+    }
+    int worldWidth = lines.get(0).length();
+    int worldHeight = lines.size();
+    if (worldWidth % Constants.SCREEN_WIDTH_TILES == 0) {
+      throw new IllegalArgumentException();
+    }
+    if (worldHeight % Constants.SCREEN_HEIGHT_TILES == 0) {
+      throw new IllegalArgumentException();
+    }
+    return null;
   }
 }
