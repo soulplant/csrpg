@@ -22,6 +22,8 @@ public class BattlePanel extends JPanel implements BattleView {
     MAIN,
     SKILLS,
   }
+  
+  private static final int MENU_OFFSET_LEFT_PX = 10;
 
   private static final int HITBOX_OFFSET_LEFT_PX = 100;
   private static final int HITBOX_OFFSET_TOP_PX = 20;
@@ -29,25 +31,18 @@ public class BattlePanel extends JPanel implements BattleView {
   private static final int HITBOX_WIDTH_PX = 180;
   private static final int HITBOX_HEIGHT_PX = 30;
 
-  private static final List<String> MAIN_ITEMS = new ArrayList<String>();
-  static {
-    MAIN_ITEMS.add("Attack");
-    MAIN_ITEMS.add("Skills");
-  };
 
   private final BattleController controller;
 
   private Color color = Color.ORANGE;
-  private final Menu currentMenu = Menu.MAIN;
-  // IMPORTANT!!
-  //private final int selectedIndex = 0;
+  private Menu currentMenu = Menu.MAIN;
+  private int selectedIndex = 0;
 
   private final List<String> menuItems = new ArrayList<String>();
   private final List<Skill> displayedSkills = new ArrayList<Skill>();
 
   private String playerName = "Player";
   private String enemyName = "Enemy";
-
 
   private int playerCurrentHp = 0;
   private int playerMaxHp = 100;
@@ -63,11 +58,72 @@ public class BattlePanel extends JPanel implements BattleView {
     addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
-        BattlePanel.this.controller.onPlayerAttack();
-        color = Color.RED;
+        switch (e.getKeyCode()) {
+        case KeyEvent.VK_DOWN:
+          maybeChangeIndex(selectedIndex + 1);
+          break;
+        case KeyEvent.VK_UP:
+          maybeChangeIndex(selectedIndex - 1);
+          break;
+          
+        case KeyEvent.VK_ENTER:
+        case KeyEvent.VK_SPACE:
+          doSelectedMenu();
+          break;
+
+        case KeyEvent.VK_ESCAPE:
+        case KeyEvent.VK_BACK_SPACE:
+          
+          break;
+          
+          default:
+            break;
+        }
+        
+        //BattlePanel.this.controller.onPlayerAttack();
         repaint();
       }
     });
+  }
+  
+  private void doSelectedMenu() {
+    switch (currentMenu) {
+    
+    case MAIN:
+      switch (selectedIndex) {
+      case 0: // Attack
+        controller.onPlayerAttack();
+        break;
+      case 1: // Skillz0rs
+        currentMenu = Menu.SKILLS;
+        break;
+      default:
+          throw new IllegalStateException();
+      }
+      break;
+      
+    case SKILLS:
+      controller.onPlayerSkill(displayedSkills.get(selectedIndex));
+      break;
+      
+    } 
+  }
+  
+  private void maybeChangeIndex(int desiredIndex) {
+    switch (currentMenu) {
+    case MAIN:
+      if ((desiredIndex >= 0) && (desiredIndex < menuItems.size())) {
+        selectedIndex = desiredIndex;
+      }
+      break;
+    case SKILLS:
+      if ((desiredIndex >= 0) && (desiredIndex < displayedSkills.size())) {
+        selectedIndex = desiredIndex;
+      }
+      break;
+    default:
+      throw new IllegalStateException();
+    }
   }
 
   @Override
@@ -90,7 +146,7 @@ public class BattlePanel extends JPanel implements BattleView {
     switch (currentMenu)
     {
     case MAIN:
-      drawMenuItems(g, offset, MAIN_ITEMS);
+      drawMenuItems(g, offset, menuItems);
       break;
 
     case SKILLS:
@@ -104,12 +160,18 @@ public class BattlePanel extends JPanel implements BattleView {
   }
 
   private void drawMenuItems(Graphics g, Point offset, List<String> items) {
-    Font f = new Font("Arial", 0, 32);
+    Font f = new Font("Courier", 0, 16);
     g.setFont(f);
     g.setColor(Color.WHITE);
 
     for (int i = 0; i < items.size(); i++) {
-      g.drawString(items.get(i), offset.x, offset.y + ((i+1) * 40));
+      String itemName = items.get(i);
+      if (i == selectedIndex) {
+        itemName = "> " + itemName;
+      } else {
+        itemName = "  " + itemName;
+      }
+      g.drawString(itemName, offset.x + MENU_OFFSET_LEFT_PX, offset.y + ((i+1) * 40));
     }
   }
 
@@ -156,8 +218,8 @@ public class BattlePanel extends JPanel implements BattleView {
 
   @Override
   public void showSkills(List<Skill> skills) {
-    skills.clear();
-    skills.addAll(skills);
+    displayedSkills.clear();
+    displayedSkills.addAll(skills);
     repaint();
   }
 

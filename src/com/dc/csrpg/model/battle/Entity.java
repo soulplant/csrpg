@@ -8,7 +8,7 @@ public class Entity {
   private int attackDamage;
   private int maxHp;
   private int currentHp;
-  private final List<Skill> skills;
+  private List<Skill> skills;
 
   public Entity(String name, int attackDamage, int maxHp, int currentHp, List<Skill> skills) {
     this.name = name;
@@ -24,6 +24,14 @@ public class Entity {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public List<Skill> getSkills() {
+    return skills;
+  }
+
+  public void setSkills(List<Skill> skills) {
+    this.skills = skills;
   }
 
   public int getMaxHp() {
