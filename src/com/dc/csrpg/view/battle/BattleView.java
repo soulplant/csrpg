@@ -11,5 +11,6 @@ public interface BattleView {
   void updatePlayerHp(int currentHp, int maxHp);
   void updateEnemyHp(int currentHp, int maxHp);
   void refresh();
-
+  void setPlayerName(String playerName);
+  void setEnemyName(String enemyName);
 }

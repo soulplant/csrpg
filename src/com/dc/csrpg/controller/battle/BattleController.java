@@ -20,6 +20,8 @@ public class BattleController {
   }
 
   public void refresh() {
+    view.setPlayerName(battle.getPlayer().getName());
+    view.setEnemyName(battle.getEnemy().getName());
     view.updatePlayerHp(battle.getPlayer().getCurrentHp(), battle.getPlayer().getMaxHp());
     view.updateEnemyHp(battle.getEnemy().getCurrentHp(), battle.getEnemy().getMaxHp());
   }

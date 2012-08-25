@@ -44,6 +44,7 @@ public class Entity {
 
   public void takeHit(int hp) {
     currentHp -= hp;
+    currentHp = Math.max(0, currentHp);
   }
 
   public void heal(int hp) {

@@ -23,10 +23,10 @@ public class BattlePanel extends JPanel implements BattleView {
     SKILLS,
   }
 
-  private static final int HITBOX_OFFSET_LEFT_PX = 70;
+  private static final int HITBOX_OFFSET_LEFT_PX = 100;
   private static final int HITBOX_OFFSET_TOP_PX = 20;
 
-  private static final int HITBOX_WIDTH_PX = 200;
+  private static final int HITBOX_WIDTH_PX = 180;
   private static final int HITBOX_HEIGHT_PX = 30;
 
   private static final List<String> MAIN_ITEMS = new ArrayList<String>();
@@ -40,13 +40,14 @@ public class BattlePanel extends JPanel implements BattleView {
   private Color color = Color.ORANGE;
   private final Menu currentMenu = Menu.MAIN;
   // IMPORTANT!!
-  private final int selectedIndex = 0;
+  //private final int selectedIndex = 0;
 
   private final List<String> menuItems = new ArrayList<String>();
   private final List<Skill> displayedSkills = new ArrayList<Skill>();
 
-  private final String playerName = "Player";
-  private final String enemyName = "Enemy";
+  private String playerName = "Player";
+  private String enemyName = "Enemy";
+
 
   private int playerCurrentHp = 0;
   private int playerMaxHp = 100;
@@ -158,6 +159,16 @@ public class BattlePanel extends JPanel implements BattleView {
     skills.clear();
     skills.addAll(skills);
     repaint();
+  }
+
+  @Override
+  public void setPlayerName(String playerName) {
+    this.playerName = playerName;
+  }
+
+  @Override
+  public void setEnemyName(String enemyName) {
+    this.enemyName = enemyName;
   }
 
   @Override
