@@ -5,6 +5,7 @@ public class TownModel {
   private Point playerPosition = new Point(0, 0);
   private Point viewportPosition = new Point(0, 0);
   private final Grid<Tile> tiles;
+  private String alert;
 
   public TownModel(Grid<Tile> tiles) {
     this.tiles = tiles;
@@ -72,5 +73,25 @@ public class TownModel {
   public boolean isPassable(Point point) {
     Tile tile = getTile(point);
     return tile.passable && !tile.hasNPC() && !tile.hasItem();
+  }
+
+  public void setAlert(String message) {
+    this.alert = message;
+  }
+
+  public boolean hasAlert() {
+    return alert != null;
+  }
+
+  public void clearAlert() {
+    alert = null;
+  }
+
+  public String getAlert() {
+    return alert;
+  }
+
+  public void removeItem(Point point) {
+    tiles.get(point).clearItem();
   }
 }

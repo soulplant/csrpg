@@ -2,9 +2,12 @@ package com.dc.csrpg;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JPanel;
 
@@ -17,6 +20,8 @@ public class TownPanel extends JPanel {
   private static final Color WALL_COLOR = Color.GRAY;
   private static final Color NPC_COLOR = Color.CYAN;
   private static final Color ITEM_COLOR = Color.YELLOW;
+  private static final Color ALERT_BACKGROUND_COLOR = Color.BLACK;
+  private static final Color ALERT_TEXT_COLOR = Color.WHITE;
 
   private final int PLAYER_WIDTH_PX = 32;
   private final int PLAYER_HEIGHT_PX = 32;
@@ -65,10 +70,33 @@ public class TownPanel extends JPanel {
     g.fillRect(0, 0, getWidth(), getHeight());
     drawTiles(g, model.getViewportTiles());
     drawPlayer(g, model.getPlayerViewportPosition());
-    drawViewport(g, model.getViewportPosition());
+    drawViewportPosition(g, model.getViewportPosition());
+    drawAlert(g, model.getAlert());
   }
 
-  private void drawViewport(Graphics g, Point viewportPosition) {
+  private void drawAlert(Graphics g, String alert) {
+    if (alert == null) {
+      return;
+    }
+    setFont(new Font("Arial", 0, 24));
+    FontMetrics fontMetrics = g.getFontMetrics();
+    Rectangle2D stringBounds = fontMetrics.getStringBounds(alert, g);
+    int stringWidth = (int) stringBounds.getWidth();
+    int stringHeight = (int) stringBounds.getHeight();
+    int x = (getWidth() - stringWidth) / 2;
+    int y = (getHeight() - stringHeight) / 2;
+
+    g.setColor(ALERT_BACKGROUND_COLOR);
+    int paddingPx = 5;
+    int padding = 2 * paddingPx;
+    g.fillRect(x - padding, y - padding, stringWidth + padding,
+        stringHeight + padding);
+    g.setColor(ALERT_TEXT_COLOR);
+
+    g.drawString(alert, x - paddingPx, y - paddingPx + stringHeight - fontMetrics.getDescent());
+  }
+
+  private void drawViewportPosition(Graphics g, Point viewportPosition) {
     Point vp = viewportPosition;
     g.setColor(Color.BLACK);
     g.drawString("(" + vp.x + ", " + vp.y + ")", 5, 15);
